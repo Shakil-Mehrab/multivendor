@@ -1,7 +1,7 @@
 <x-guest-layout>
     <x-jet-authentication-card>
         <x-slot name="logo">
-            <x-jet-authentication-card-logo />
+             <img class="img-fluid text-center" style="width:10%;margin-left:45%" src="{{asset('/images/logo.png')}}" alt="Logo" />
         </x-slot>
 
         <x-jet-validation-errors class="mb-4" />
@@ -42,6 +42,9 @@
                 <x-jet-button class="ml-4">
                     {{ __('Login') }}
                 </x-jet-button>
+            </div>
+            <div class="flex items-center justify-end mt-4">
+                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="/register"><strong> {{ __("Don't Have You any Account ? Register Now") }}</strong></a>
             </div>
         </form>
     </x-jet-authentication-card>

@@ -1,6 +1,6 @@
-@php 
+@php
     $carts=Cart::getContent();
-@endphp   
+@endphp
 <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
     <span class="cart-count">{{count($carts)}}</span>
 </a>
@@ -8,7 +8,7 @@
 <div class="dropdown-menu" >
     <div class="dropdownmenu-wrapper">
         <div class="dropdown-cart-products">
-       
+
         @forelse($carts as $cart)
             <div class="product">
                 <div class="product-details">
@@ -19,6 +19,9 @@
                     <span class="cart-product-info">
                         <span class="cart-product-qty">{{$cart->quantity}}</span>
                         x  ৳ {{$cart->price}}
+                    </span><br>
+                     <span class="cart-product-info">
+                        <span class="cart-product-qty">{{$cart->attributes->size}}</span>
                     </span>
                 </div><!-- End .product-details -->
 
@@ -30,7 +33,7 @@
                 </figure>
             </div><!-- End .product -->
         @empty
-        @endforelse  
+        @endforelse
         </div><!-- End .cart-product -->
 
         <div class="dropdown-cart-total">
@@ -39,8 +42,12 @@
         </div><!-- End .dropdown-cart-total -->
 
         <div class="dropdown-cart-action">
-            <a href="/user/show/cart" class="btn">View Cart</a>
-            <a href="/user/show/cart" class="btn">Checkout</a>
+             @if($carts->count()==0)
+                <a href="/" class="btn">Continue Shopping</a>
+            @else
+                <a href="/user/show/cart" class="btn">View Cart</a>
+                <a href="/user/show/cart" class="btn">Checkout</a>
+            @endif
         </div><!-- End .dropdown-cart-total -->
     </div><!-- End .dropdownmenu-wrapper -->
 </div>

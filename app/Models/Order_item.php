@@ -9,8 +9,8 @@ use App\Models\Order;
 class Order_item extends Model
 {
     use HasFactory;
-    public function product(){
-        return $this->belongsTo('App\Models\Product');
+    public function product_image(){
+        return $this->belongsTo('App\Models\Product_image');
      }
      public function order(){
         return $this->belongsTo(Order::class);

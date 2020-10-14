@@ -115,7 +115,7 @@
                            </td>
                               <td class="center">
                                  <div class="btn-group">
-                                       <a href="{{url('/admin/delete-alt-image/'.$productImage->id)}}" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> </a>
+                                       <a href="{{url('/admin/delete-alt-image/'.$productImage->id)}}" class="btn btn-danger btn-sm productImageDelete"><i class="fa fa-trash-o"></i> </a>
                                  </div>
                               </td>
                            </tr>
@@ -132,5 +132,21 @@
    </section>
  </div>
  <!-- /.content-wrapper -->
-
+@endsection
+@section('js')
+<script>
+ // delete
+   $(document).ready( function () {
+    $(".productImageDelete").click(function(e){
+        e.preventDefault();
+        var link=$(this).attr("href");
+        bootbox.confirm("Are you sure to delete",function(confirmed){
+        if(confirmed){
+            // alert(link)
+        window.location.href=link;
+        };
+        });
+    });
+   });
+</script>
 @endsection

@@ -1,10 +1,15 @@
 @extends('layout.app')
+@section('title','Product Details - ')
+@section('css')
+    <link href="{{asset('porto/normalrating/css/bootstrap.css')}}" rel="stylesheet">
+    <link href="{{asset('porto/normalrating/css/rating.css')}}" rel="stylesheet">
+@endsection
 @section('content')
 @php
 use App\Models\Product;
 $sameProducts=Product::orderBy('id','desc')->get();
-$relatedProducts=Product::orderBy('id','desc')->where('slug',$product->slug)->get();
-$oldProducts=Product::orderBy('id','asc')->get();
+$relatedProducts=Product::orderBy('id','desc')->where('category_id',$product->category_id)->get();
+$oldProducts=Product::orderBy('id','asc')->where('shop_id',$product->shop_id)->get();
 $i=0;
 @endphp
 <main class="main">
@@ -27,22 +32,15 @@ $i=0;
                         <div class="col-lg-7 col-md-6 product-single-gallery">
                             <div class="product-slider-container product-item">
                                 <div class="product-single-carousel owl-carousel owl-theme">
-                                	{{-- <div class="product-item">
-                                        <img class="product-single-image" src="{{asset('uploads/products')}}/{{$product->image}}" data-zoom-image="{{asset('uploads/products')}}/{{$product->image}}"/>
-                                         <span style="font-size:16px;color:white;border-radius:6px;background:#a96262;padding:2px 6px;position: absolute;
-                                                bottom: 0px;right:50%">{{$i=$i+1}}/{{$sameProducts->count()}}</span>
-                                    </div> --}}
                                     @forelse($product->productImages as $same)
                                     <div class="product-item">
                                         <img class="product-single-image" src="{{asset('/uploads/products/'.$same->image)}}"/>
                                         <span style="font-size:16px;color:white;border-radius:6px;background:#a96262;padding:2px 6px;position: absolute;
-                                        bottom: 0px;left:0%">{{$i=$i+1}}/{{$product->productImages->count()}}</span>
-                                        <a href="#" class="paction add-cart" title="Add to Cart" data-id="{{$same->id}}" style="border:2px solid black;position: absolute;
-                                            bottom: 0px;right:0%">
-                                            <span>Add to Cart</span>
-                                        </a>
+                                        bottom: 0px;left:50%">{{$i=$i+1}}/{{$product->productImages->count()}}</span>
+
+                                        <input type="hidden" id="imgId" value="{{$same->id}}">
                                     </div>
-                                    
+
                                     @empty
                                 	@endforelse
                                 </div>
@@ -71,37 +69,35 @@ $i=0;
 
                                     <a href="#" class="rating-link">({{$product->reviews->count()}} Reviews)</a>
                                 </div>
-                                {{-- @php
-                                    use App\Models\Product_discount;
-                                    $productDiscount=Product_discount::where('product_id',$product->id)->first();
-                                @endphp
+
                                 <div class="price-box">
-                                    @if($productDiscount=='')
+                                    @if($product->discount==null)
                                          <span class="product-price">৳ {{$product->sale_price}}</span>
                                     @else
                                         <span class="old-price">৳ {{$product->sale_price}}</span>
-                                        <span class="product-price">৳ {{$product->sale_price-$product->sale_price*$productDiscount->discount->discount}}</span>
-                                       
+                                        @if($product_discount->type=='percentage')
+                                        <span class="product-price">৳ {{$product->sale_price-$product->sale_price*$product->discount->discount}}</span>
+                                        @else
+                                        <span class="product-price">৳ {{$price=$product->sale_price-$product->discount->discount}}</span>
+                                        @endif
                                     @endif
-                                </div> --}}
+                                </div>
 
                                 <div class="product-desc" style="text-align:justify;">
                                     <p>@php echo substr($product->description,0,700) @endphp</p>
                                 </div>
-                                
+
                                 <div class="product-filters-container">
-                                    {{-- <div class="product-single-filter">
-                                        <label>Color : </label>
-                                        @forelse($product->product_attributes as $attribute)
-                                        @if($attribute->code=='color')
-                                        <span>{{$attribute->name}}&nbsp; </span>
-                                        @endif
-                                        @empty
-                                		@endforelse
-                                    </div> --}}
+                                     <div>
+                                        <p>Views : {{$product->view}}</p>
+                                        <p>Sale Count : {{$product->sale_count==0?'1':$product->sale_count}}</p>
+                                        <p>Minimum Order : {{$product->min_order}} pieces</p>
+                                        <p>Product Code : {{$product->code}}</p>
+                                    </div>
                                     <div class="product-single-filter">
                                         <label>Size</label>
                                         <select class="form-control" name="size" id='size' required>
+                                            <option value="">Select One</option>
                                             @forelse($product->attributes as $ct)
                                             <option value="{{$ct->id}}">{{$ct->size}}</option>
                                             @empty
@@ -110,21 +106,21 @@ $i=0;
                                         </select>
                                     </div>
                                 </div>
-                                {{-- <div class="product-action product-all-icons">
+                                <div class="product-action product-all-icons">
                                     <div class="product-single-qty">
-                                        <input class="horizontal-quantity form-control" type="text">
+                                        <input class="form-control" value="{{$product->min_order}}" min='12' type="number">
                                     </div>
 
-                                    <button class="paction add-cart" title="Add to Cart" data-id="{{$product->id}}">
-                                        <span>Add to Cart</span>
-                                    </button>
+                                    <a href="#" class="paction add-cart" title="Add to Cart">
+                                            <span>Add to Cart</span>
+                                    </a>
                                     <a href="#" class="paction add-wishlist" title="Add to Wishlist">
                                         <span>Add to Wishlist</span>
                                     </a>
                                     <a href="#" class="paction add-compare" title="Add to Compare">
                                         <span>Add to Compare</span>
                                     </a>
-                                </div> --}}
+                                </div>
                                 <!-- <div class="product-single-share">
                                     <label>Share:</label>
                                     <div class="addthis_inline_share_toolbox"></div>
@@ -140,10 +136,10 @@ $i=0;
                             <a class="nav-link" id="product-tab-desc" data-toggle="tab" href="#product-desc-content" role="tab" aria-controls="product-desc-content" aria-selected="true">Description</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="product-tab-tags" data-toggle="tab" href="#product-tags-content" role="tab" aria-controls="product-tags-content" aria-selected="false">Tags</a>
+                            <a class="nav-link active" id="product-tab-tags" data-toggle="tab" href="#product-tags-content" role="tab" aria-controls="product-tags-content" aria-selected="false">Tags</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" id="product-tab-reviews" data-toggle="tab" href="#product-reviews-content" role="tab" aria-controls="product-reviews-content" aria-selected="false">Reviews</a>
+                            <a class="nav-link" id="product-tab-reviews" data-toggle="tab" href="#product-reviews-content" role="tab" aria-controls="product-reviews-content" aria-selected="false">Reviews</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -168,55 +164,20 @@ $i=0;
 
                         <div class="tab-pane fade show active" id="product-reviews-content" role="tabpanel" aria-labelledby="product-tab-reviews">
                             <div class="product-reviews-content">
-                                <div class="collateral-box">
-                                    <ul>
-                                        <li>Be the first to review this product</li>
-                                    </ul>
-                                </div><!-- End .collateral-box -->
-
                                 <div class="add-product-review">
                                     <h3 class="text-uppercase heading-text-color font-weight-semibold">WRITE YOUR OWN REVIEW</h3>
-                                    <p>How do you rate this product? *</p>
-
                                     <form action="{{route('review.product',$product->id)}}" method="post">
                                     	@csrf
-                                        <table class="ratings-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>&nbsp;</th>
-                                                    <th>1 star</th>
-                                                    <th>2 stars</th>
-                                                    <th>3 stars</th>
-                                                    <th>4 stars</th>
-                                                    <th>5 stars</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Quality</td>
-                                                    <td>
-                                                        <input type="radio" name="rating" id="Quality_1" value="1" class="radio">
-                                                    </td>
-                                                    <td>
-                                                        <input type="radio" name="rating" id="Quality_2" value="2" class="radio">
-                                                    </td>
-                                                    <td>
-                                                        <input type="radio" name="rating" id="Quality_3" value="3" class="radio">
-                                                    </td>
-                                                    <td>
-                                                        <input type="radio" name="rating" id="Quality_4" value="4" class="radio">
-                                                    </td>
-                                                    <td>
-                                                        <input type="radio" name="rating" id="Quality_5" value="5" class="radio">
-                                                    </td>
-                                                    @if ($errors->has('rating'))
-					                                <span class="help-block">
-					                                    <strong style="color:red">{{ $errors->first('rating') }}</strong>
-					                                </span>
-					                                @endif
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        <div class="container" style="marigin-top:35px">
+                                            <div class="ratings">
+                                              <input type="radio" name="rating" id="rating" value="1" required/>
+                                              <input type="radio" name="rating" id="rating" value="2"/>
+                                              <input type="radio" name="rating" id="rating" value="3"/>
+                                              <input type="radio" name="rating" id="rating" value="4"/>
+                                              <input type="radio" name="rating" id="rating" value="5"/>
+                                            </div>
+                                            <span class="info"></span>
+                                         </div>
                                         <div class="form-group mb-2">
                                             <label>Review <span class="required">*</span></label>
                                             <textarea name="review" cols="5" rows="6" class="form-control form-control-sm"></textarea>
@@ -265,14 +226,14 @@ $i=0;
                     <div class="widget widget-banner">
                         <div class="banner banner-image">
                             <a href="#">
-                                <img src="assets/images/banners/banner-sidebar.jpg" alt="Banner Desc">
+                                <img src="{{asset('porto/images/banners/banner-sidebar.jpg')}}" alt="Banner Desc">
                             </a>
                         </div><!-- End .banner -->
                     </div><!-- End .widget -->
 
                     <div class="widget widget-featured">
-                        <h3 class="widget-title">Featured Products</h3>
-                        
+                        <h3 class="widget-title">Recent Products</h3>
+
                         <div class="widget-body">
                             <div class="owl-carousel widget-featured-products">
                             	@forelse($oldProducts as $old)
@@ -280,7 +241,7 @@ $i=0;
                                     <div class="product product-sm">
                                         <figure class="product-image-container">
                                             <a href="/user/product/show/{{$old->id}}" class="product-image">
-                                                <img src="{{asset('storage/app/public')}}/{{$old->cover_img}}" alt="product">
+                                                <img src="{{asset('/uploads/products/'.$old->image)}}" alt="product">
                                             </a>
                                         </figure>
                                         <div class="product-details">
@@ -289,13 +250,13 @@ $i=0;
                                             </h2>
                                             <div class="ratings-container">
                                                 <div class="product-ratings">
-                                                    <span class="ratings" style="width:{{100/5*$old->rating}}%"></span><!-- End .ratings -->
-                                                </div><!-- End .product-ratings -->
-                                            </div><!-- End .product-container -->
+                                                    <span class="ratings" style="width:{{100/5*$old->rating}}%"></span>
+                                                </div>
+                                            </div>
                                             <div class="price-box">
                                                 <span class="product-price">৳ {{$old->sale_price}}</span>
-                                            </div><!-- End .price-box -->
-                                        </div><!-- End .product-details -->
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 @empty
@@ -313,50 +274,69 @@ $i=0;
             <h2 class="carousel-title">Related Products</h2>
 
             <div class="featured-products owl-carousel owl-theme owl-dots-top">
-            	@forelse($relatedProducts as $product)
-                <div class="product">
+            	@forelse($relatedProducts as $rlt)
+                    @if($rlt->id==$product->id)
+                    @else
+                    <div class="product">
                     <figure class="product-image-container">
-                        <a href="/user/product/show/{{$product->id}}" class="product-image">
-                            <img src="{{asset('storage/app/public')}}/{{$product->cover_img}}" alt="product">
+                        <a href="/user/product/show/{{$rlt->id}}" class="product-image">
+                            <img src="{{asset('/uploads/products/'.$rlt->image)}}" alt="product">
                         </a>
-                        <a href="/user/product/quick/show/{{$product->id}}" class="btn-quickview">Quick View</a>
+                        <a href="/user/product/quick/show/{{$rlt->id}}" class="btn-quickview">Quick View</a>
                     </figure>
                     <div class="product-details">
                         <div class="ratings-container">
                             <div class="product-ratings">
-                                <span class="ratings" style="width:{{100/5*$product->rating}}%"></span><!-- End .ratings -->
+                                <span class="ratings" style="width:{{100/5*$rlt->rating}}%"></span><!-- End .ratings -->
                             </div><!-- End .product-ratings -->
                         </div><!-- End .product-container -->
                         <h2 class="product-title">
-                            <a href="/user/product/show/{{$product->id}}">{{$product->name}}</a>
+                            <a href="/user/product/show/{{$rlt->id}}">{{$rlt->name}}</a>
                         </h2>
                         <div class="price-box">
-                            <span class="product-price">৳ {{$product->sale_price}}</span>
+                            <span class="product-price">৳ {{$rlt->sale_price}}</span>
                         </div><!-- End .price-box -->
 
-                        <div class="product-action">
-                            <a href="#" class="paction add-wishlist" title="Add to Wishlist">
-                                <span>Add to Wishlist</span>
-                            </a>
+                        <!--<div class="product-action">-->
+                        <!--    <a href="#" class="paction add-wishlist" title="Add to Wishlist">-->
+                        <!--        <span>Add to Wishlist</span>-->
+                        <!--    </a>-->
 
-                            <a href="/user/cart/add/{{$product->id}}" class="paction add-cart" title="Add to Cart">
-                                <span>Add to Cart</span>
-                            </a>
+                        <!--    <a href="/user/cart/add/{{$rlt->id}}" class="paction add-cart" title="Add to Cart">-->
+                        <!--        <span>Add to Cart</span>-->
+                        <!--    </a>-->
 
-                            <a href="#" class="paction add-compare" title="Add to Compare">
-                                <span>Add to Compare</span>
-                            </a>
-                        </div><!-- End .product-action -->
+                        <!--    <a href="#" class="paction add-compare" title="Add to Compare">-->
+                        <!--        <span>Add to Compare</span>-->
+                        <!--    </a>-->
+                        <!--</div>-->
                     </div><!-- End .product-details -->
                 </div>
+                @endif
                 @empty
                 @endforelse
-                
+
             </div><!-- End .featured-proucts -->
         </div><!-- End .container -->
     </div><!-- End .featured-section -->
 </main>
     <!-- <script src="../../../../s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5b927288a03dbde6"></script> -->
 
+@endsection
+@section('js')
+    <script src="{{asset('porto/normalrating/js/bootstrap.js')}}"></script>
+    <script src="{{asset('porto/normalrating/js/jquery.min.js')}}"></script>
+    <script src="{{asset('porto/normalrating/js/rating.js')}}"></script>
+    <script>
+    $('.ratings').rating(function(vote,event){
+      $.ajax({
+        method:"POST",
+        url:'/rating/show',
+        data:{vote:vote}
+      }).done(function(info){
+        $('.info').html("your rating: <b>"+info+"<b>")
+      })
+    })
+  </script>
 @endsection
 

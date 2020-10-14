@@ -79,39 +79,36 @@ class CartController extends Controller
         ]);
         return view('layout.cart.basket');
     }
-    
-    
-    
+
+
+
     public function update(Request $request,$id){
-    //   $product=Product_image::find($id);
-    //   $subtotal=Cart::getSubTotal();
-    //   dd(request('qty'));
-    //   if($request->quantity<$product->min_order){return back()->withError('Order Minimum'.$product->min_order);}
+        $attribute=Product_attribute::find($request['size_id']);
+        $productImage=Product_image::find($id);
+        $size=$attribute->size;
         Cart::update($id,array(
             'quantity'=>array(
                 'relative' => false,
                 'value'=>$request->qty,
-    
                 ),
-            // 'attributes' => array(
-            //     'size' => $request->size,
-            //     'image' => $product->image1,
-            //     'vat' => $product->vat,
-            //      ),
+            'attributes' => array(
+                'size' => $size,
+                'image' => $productImage->image,
+                 ),
             ));
         return view('layout.cart.cartTable');
     }
-    
+
     public function destroy($id){
       Cart::remove($id);
         return view('layout.cart.basket');
     }
-    
+
     public function checkout(){
       return view('layout.cart.checkout');
     }
-    
-    
+
+
      public function show(Request $request)
         {
             if($request->has('country_id')){
@@ -147,11 +144,11 @@ class CartController extends Controller
                return $cities;
             }
         }
-    
-    
-    
-    
-    
+
+
+
+
+
     //shipping
     public function store(Request $request){
         // dd($request->all());
@@ -164,7 +161,7 @@ class CartController extends Controller
                 'shipping_zipcode' => 'required',
                 'payment_method' => 'required',
                 'deliverybranch_id' => 'required',
-    
+
             ]);
             $order = new Order();
             $order->order_number = uniqid('OrderNumber-');
@@ -176,11 +173,11 @@ class CartController extends Controller
             $order->shipping_zipcode = $request->input('shipping_zipcode');
             $order->notes = $request->input('notes');
             $order->deliverybranch_id = $request->input('deliverybranch_id');
-    
+
             // dd($request->input('billing_fullname'));
-    
+
             if(empty($request->input('billing_fullname'))) {
-    
+
                 $order->billing_fullname = $request->input('shipping_fullname');
                 $order->billing_country_id = $request->input('country_id');
                 $order->billing_city_id = $request->input('city_id');
@@ -203,11 +200,11 @@ class CartController extends Controller
             //     $order->billing_address = $request->input('billing_address');
             //     $order->billing_phone = $request->input('billing_phone');
             //     $order->billing_zipcode = $request->input('billing_zipcode');
-    
-    
+
+
             // }
-    
-    
+
+
             // delivary charge adding
             // $branch_id = $request['deliverybranch_id'];
             // $branch = Coupon::where('id', $branch_id)->first();
@@ -222,16 +219,16 @@ class CartController extends Controller
             // }
             // dd($couponData);
             //coupon logic
-    
+
            //end delivary charge adding
-    
-    
+
+
     // dd(request('payment_method'));
             $deliveryBranch=Deliverybranch::find($request->input('deliverybranch_id'));
             $order->grand_total = \Cart::getTotal()+$deliveryBranch->charge;
             $order->item_count = \Cart::getContent()->count();
             $order->user_id = auth()->id();
-    
+
             if (request('payment_method') == 'paypal') {
                 $order->payment_method = 'paypal';
             }
@@ -248,9 +245,9 @@ class CartController extends Controller
                 $product=Product::find($productImage->product_id);
                 $product->sale_count=$product->sale_count+1;
                 $product->update();
-    
+
             }
-    
+
             //payment
             if(request('payment_method') == 'paypal') {
                     //redirect to paypal
@@ -259,7 +256,7 @@ class CartController extends Controller
             //empty cart
             \Cart::clear();
             return redirect('/')->withSuccess('Order has been placed');
-    
+
         }
         public function applyCoupon(Request $request){
             $couponCode = $request['coupon_code'];

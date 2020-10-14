@@ -101,10 +101,10 @@
                                <div id="myElem" style="display:none;" class="alert alert-success">Active</div>
                               </td>
                                <td>
-                              {{-- <a href="{{url('/admin/add-images/'.$product->id)}}" class="btn btn-info btn-sm" title="Add Images"><i class="fa fa-image"></i></button>
-                              <a href="{{url('/admin/add-attributes/'.$product->id)}}" class="btn btn-warning btn-sm" title="Add Attributes"><i class="fa fa-list"></i></button> --}}
-                               <a href="{{url('/admin/edit-shop/'.$product->id)}}" class="btn btn-add btn-sm" title="Edit Product"><i class="fa fa-pencil"></i></button>
-                               <a href="{{url('/admin/delete-shop/'.$product->id)}}" class="btn btn-danger btn-sm" title="Delete Product"><i class="fa fa-trash-o"></i> </button>
+                                <a href="{{url('/admin/view-shop/product/'.$product->id)}}" class="btn btn-info btn-sm" title="View Product"><i class="fa fa-eye"></i></a>
+                               {{-- <a href="{{url('/admin/add-attributes/'.$product->id)}}" class="btn btn-warning btn-sm" title="Add Attributes"><i class="fa fa-list"></i></button> --}}
+                               <a href="{{url('/admin/edit-shop/'.$product->id)}}" class="btn btn-add btn-sm" title="Edit Product"><i class="fa fa-pencil"></i></a>
+                               <a href="{{url('/admin/delete-shop/'.$product->id)}}" class="btn btn-danger btn-sm shopDelete" title="Delete Product"><i class="fa fa-trash-o"></i></a>
                                </td>
                                @endif
                             </tr>
@@ -123,7 +123,18 @@
 @endsection
 @section('js')
 <script>
+ // delete
    $(document).ready( function () {
+    $(".shopDelete").click(function(e){
+        e.preventDefault();
+        var link=$(this).attr("href");
+        bootbox.confirm("Are you sure to delete",function(confirmed){
+        if(confirmed){
+            alert(link)
+        // window.location.href=link;
+        };
+        });
+    });
    $(".ShopStatus").change(function(){
           var id = $(this).attr('rel');
           if($(this).prop("checked")==true){

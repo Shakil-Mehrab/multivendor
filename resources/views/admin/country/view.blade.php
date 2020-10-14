@@ -80,7 +80,7 @@
                                 </td>
                                <td>
                                <a href="{{url('/admin/edit-country/'.$category->id)}}" class="btn btn-add btn-sm"><i class="fa fa-pencil"></i></button>
-                               <a href="{{url('/admin/delete-country/'.$category->id)}}" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> </button>
+                               <a href="{{url('/admin/delete-country/'.$category->id)}}" class="btn btn-danger btn-sm countryDelete"><i class="fa fa-trash-o"></i> </button>
                                </td>
                             </tr>
                              @endforeach
@@ -96,4 +96,21 @@
     <!-- /.content -->
  </div>
  <!-- /.content-wrapper -->
+@endsection
+@section('js')
+<script>
+ // delete
+   $(document).ready( function () {
+    $(".countryDelete").click(function(e){
+        e.preventDefault();
+        var link=$(this).attr("href");
+        bootbox.confirm("Are you sure to delete",function(confirmed){
+        if(confirmed){
+            // alert(link)
+        window.location.href=link;
+        };
+        });
+    });
+   });
+</script>
 @endsection

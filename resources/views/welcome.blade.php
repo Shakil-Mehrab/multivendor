@@ -1,43 +1,54 @@
 @extends('layout.app')
 @section('content')
+@php
+    use App\Models\Slide;
+    use App\Models\Banner;
+    $slides=Slide::orderBy('id','desc')->get();
+    $winter_banner=Banner::where('text_style','winter')->first();
+@endphp
 <main class="main">
     <div class="home-slider-container">
         <div class="home-slider owl-carousel owl-theme owl-theme-light">
-            <div class="home-slide">
 
-                <div class="slide-bg owl-lazy"  data-src="porto/images/slider/slide-1.jpg"></div><!-- End .slide-bg -->
+            @forelse($slides as $slide)
+            @if($slide->position=='right')
+            <div class="home-slide">
+                <div class="slide-bg owl-lazy"  data-src="{{asset('uploads/slider/'.$slide->image)}}"></div>
                 <div class="container">
                     <div class="home-slide-content">
                         <div class="slide-border-top">
                             <img src="porto/images/slider/border-top.png" alt="Border" width="290" height="38">
-                        </div><!-- End .slide-border-top -->
+                        </div>
                         <h3>80% off for select items</h3>
-                        <h1>fashion mega sale</h1>
+                        <h1>{{$slide->name}}</h1>
                         <a href="#" class="btn btn-primary">Shop Now</a>
                         <div class="slide-border-bottom">
                             <img src="porto/images/slider/border-bottom.png" alt="Border" width="290" height="111">
                         </div><!-- End .slide-border-bottom -->
                     </div><!-- End .home-slide-content -->
                 </div><!-- End .container -->
-            </div><!-- End .home-slide -->
-
+            </div>
+            @else
             <div class="home-slide">
-                <div class="slide-bg owl-lazy"  data-src="porto/images/slider/slide-2.jpg"></div><!-- End .slide-bg -->
+                <div class="slide-bg owl-lazy"  data-src="{{asset('uploads/slider/'.$slide->image)}}"></div>
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6 offset-md-6">
                             <div class="home-slide-content slide-content-big">
                                 <h3>up to 70% off</h3>
-                                <h1>Women's Hats</h1>
+                                <h1>{{$slide->name}}</h1>
                                 <a href="#" class="btn btn-primary">Shop Now</a>
                             </div><!-- End .home-slide-content -->
                         </div><!-- End .col-lg-5 -->
                     </div><!-- End .row -->
                 </div><!-- End .container -->
             </div><!-- End .home-slide -->
-        </div><!-- End .home-slider -->
-    </div><!-- End .home-slider-container -->
+            @endif
+            @empty
+            @endforelse
 
+        </div><!-- End .home-slider -->
+    </div>
     <div class="info-boxes-container">
         <div class="container">
             <div class="info-box">
@@ -68,7 +79,7 @@
             </div><!-- End .info-box -->
         </div><!-- End .container -->
     </div><!-- End .info-boxes-container -->
-    
+
     <div class="banners-group">
         <div class="container">
             <div class="row">
@@ -99,14 +110,14 @@
         </div><!-- End .container -->
     </div><!-- End .banneers-group -->
 
-    <div class="featured-products-section carousel-section">
+    <div class="featured-products-section carousel-section py-1">
         <div class="container">
             <h2 class="h3 title mb-4 text-center">Featured Products</h2>
 
             <div class="featured-products owl-carousel owl-theme">
             @php
                 use App\Models\Product;
-                $products=Product::orderBy('id','asc')->where('status',1)->where('featured',1)->get();
+                $products=Product::orderBy('id','desc')->where('status',1)->where('featured',1)->get();
             @endphp
             @forelse($products as $product)
                 <div class="product">
@@ -149,10 +160,121 @@
             </div><!-- End .featured-proucts -->
         </div><!-- End .container -->
     </div>
-    <div class="mb-5"></div><!-- margin -->
-    <!-- offered products -->
-   
-    <div class="mb-5"></div><!-- margin -->
+    <!--winter banner-->
+    @if(!empty($winter_banner->name))
+    <div class="promo-section" style="background-image: url({{ asset('/uploads/banners/'.$winter_banner->image) }})">
+        <div class="container">
+            <!--<h3>{{$winter_banner->name}}</h3>-->
+            <!--<a href="#" class="btn btn-dark">Shop Now</a>-->
+        </div><!-- End .container -->
+    </div>
+    <div class="mb-5"></div>
+    @endif
+    <!-- Winter Collection -->
+    <div class="featured-products-section carousel-section py-1">
+        <div class="container">
+            <h2 class="h3 title mb-4 text-center">Winter Special Collection</h2>
+
+            <div class="featured-products owl-carousel owl-theme">
+            @php
+
+                $products=Product::orderBy('id','desc')->where('status',1)->where('position','winter')->get();
+            @endphp
+            @forelse($products as $product)
+                <div class="product">
+                    <figure class="product-image-container">
+                        <a href="/user/product/show/{{$product->id}}" class="product-image">
+                            <img src="{{asset('uploads/products')}}/{{$product->image}}" alt="product">
+                        </a>
+                        <a href="/user/product/quick/show/{{$product->id}}" class="btn-quickview">Quickview</a>
+                    </figure>
+                    <div class="product-details">
+                        <div class="ratings-container">
+                            <div class="product-ratings">
+                                <span class="ratings" style="width:{{100/5*$product->rating}}%"></span><!-- End .ratings -->
+                            </div><!-- End .product-ratings -->
+                        </div><!-- End .product-container -->
+                        <h2 class="product-title">
+                            <a href="/user/product/show/{{$product->id}}">{{$product->name}}</a>
+                        </h2>
+                        <div class="price-box">
+                            <span class="product-price">৳ {{$product->sale_price}}</span>
+                        </div><!-- End .price-box -->
+
+                        {{-- <div class="product-action">
+                            <a href="#" class="paction add-wishlist" title="Add to Wishlist">
+                                <span>Add to Wishlist</span>
+                            </a>
+
+                            <a href="#" class="paction add-cart" title="Add to Cart" data-id="{{$product->id}}">
+                                <span>Add to Cart</span>
+                            </a>
+
+                            <a href="#" class="paction add-compare" title="Add to Compare">
+                                <span>Add to Compare</span>
+                            </a>
+                        </div> --}}
+                    </div><!-- End .product-details -->
+                </div><!-- End .product -->
+            @empty
+            @endforelse
+            </div><!-- End .featured-proucts -->
+        </div><!-- End .container -->
+    </div>
+    <!-- Winter Hoodie Collection -->
+    <div class="featured-products-section carousel-section py-1">
+        <div class="container">
+            <h2 class="h3 title mb-4 text-center">Winter Hoodie Collection</h2>
+
+            <div class="featured-products owl-carousel owl-theme">
+            @php
+
+                $products=Product::orderBy('id','desc')->where('status',1)->where('position','winter')->get();
+            @endphp
+            @forelse($products as $product)
+            @if($product->category->slug=='hoodie' or $product->category->slug=='jacket')
+                <div class="product">
+                    <figure class="product-image-container">
+                        <a href="/user/product/show/{{$product->id}}" class="product-image">
+                            <img src="{{asset('uploads/products')}}/{{$product->image}}" alt="product">
+                        </a>
+                        <a href="/user/product/quick/show/{{$product->id}}" class="btn-quickview">Quickview</a>
+                    </figure>
+                    <div class="product-details">
+                        <div class="ratings-container">
+                            <div class="product-ratings">
+                                <span class="ratings" style="width:{{100/5*$product->rating}}%"></span><!-- End .ratings -->
+                            </div><!-- End .product-ratings -->
+                        </div><!-- End .product-container -->
+                        <h2 class="product-title">
+                            <a href="/user/product/show/{{$product->id}}">{{$product->name}}</a>
+                        </h2>
+                        <div class="price-box">
+                            <span class="product-price">৳ {{$product->sale_price}}</span>
+                        </div><!-- End .price-box -->
+
+                        {{-- <div class="product-action">
+                            <a href="#" class="paction add-wishlist" title="Add to Wishlist">
+                                <span>Add to Wishlist</span>
+                            </a>
+
+                            <a href="#" class="paction add-cart" title="Add to Cart" data-id="{{$product->id}}">
+                                <span>Add to Cart</span>
+                            </a>
+
+                            <a href="#" class="paction add-compare" title="Add to Compare">
+                                <span>Add to Compare</span>
+                            </a>
+                        </div> --}}
+                    </div><!-- End .product-details -->
+                </div><!-- End .product -->
+            @endif
+            @empty
+            @endforelse
+            </div><!-- End .featured-proucts -->
+        </div><!-- End .container -->
+    </div>
+    <!--<div class="mb-5"></div>-->
     <!-- new arrivals -->
     <div class="carousel-section">
         <div class="container">
@@ -163,7 +285,7 @@
                 @endphp
                 @forelse($products as $product)
                 @if($product->discount=='[]')
-                
+
                     <div class="product">
                         <figure class="product-image-container">
                             <a href="/user/product/show/{{$product->id}}" class="product-image">
@@ -221,7 +343,7 @@
                         </div><!-- End .feature-box-content -->
                     </div><!-- End .feature-box -->
                 </div><!-- End .col-md-4 -->
-                
+
                 <div class="col-md-4">
                     <div class="feature-box feature-box-simple text-center">
                         <i class="icon-credit-card"></i>
@@ -252,7 +374,7 @@
             <h3>fashion show collection</h3>
             <a href="#" class="btn btn-dark">Shop Now</a>
         </div><!-- End .container -->
-    </div><!-- End .promo-section -->
+    </div>
 
     <div class="partners-container">
         <div class="container">
@@ -280,7 +402,7 @@
                 </a>
             </div><!-- End .partners-carousel -->
         </div><!-- End .container -->
-    </div><!-- End .partners-container -->
+    </div>
 
     <div class="blog-section">
         <div class="container">

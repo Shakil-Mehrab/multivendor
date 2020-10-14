@@ -62,6 +62,7 @@
                             <tr class="info">
                                <th>ID</th>
                                <th>Product Name</th>
+                               <th>Product Slug</th>
                                <th>Category Name</th>
                                <th>Shop Name</th>
                                <th>Product Code</th>
@@ -69,6 +70,7 @@
                                <th>Image</th>
                                <th>Price</th>
                                @if(auth()->user()->role_id==1)
+                               <th>Sale Price</th>
                                <th>Status</th>
                                <th>Featured Products</th>
                                @endif
@@ -80,6 +82,7 @@
                             <tr>
                             <td>{{$product->id}}</td>
                             <td>{{$product->name}}</td>
+                            <td>{{$product->slug}}</td>
                             <td>{{$product->category->name}}</td>
                             <td>{{$product->shop->name}}</td>
                                <td>{{$product->code}}</td>
@@ -89,9 +92,9 @@
                                     <img src="{{asset('/uploads/products/'.$product->image)}}" alt="" style="width:100px;">
                                 @endif
                                 </td>
-
                                <td>{{$product->price}}</td>
                                @if(auth()->user()->role_id==1)
+                               <td>{{$product->sale_price}}</td>
                                <td>
                                <input type="checkbox" class="ProductStatus btn btn-success" rel="{{$product->id}}"
                                data-toggle="toggle" data-on="Enabled" data-of="Disabled" data-onstyle="success" data-offstyle="danger"
@@ -101,7 +104,7 @@
                                <td>
                                  <input type="checkbox" class="FeaturedStatus btn btn-success" rel="{{$product->id}}"
                                  data-toggle="toggle" data-on="Enabled" data-of="Disabled" data-onstyle="success" data-offstyle="danger"
-                                 @if($product['status']=="1") checked @endif>
+                                 @if($product['featured']=="1") checked @endif>
                                  <div id="myElem" style="display:none;" class="alert alert-success">Status Enabled</div>
                                  </td>
                                  @endif
@@ -109,7 +112,7 @@
                               <a href="{{url('/admin/add-images/'.$product->id)}}" class="btn btn-info btn-sm" title="Add Images"><i class="fa fa-image"></i></button>
                               <a href="{{url('/admin/add-attributes/'.$product->id)}}" class="btn btn-warning btn-sm" title="Add Attributes"><i class="fa fa-list"></i></button>
                                <a href="{{url('/admin/edit-product/'.$product->id)}}" class="btn btn-add btn-sm" title="Edit Product"><i class="fa fa-pencil"></i></button>
-                               <a href="{{url('/admin/delete-product/'.$product->id)}}" class="btn btn-danger btn-sm" title="Delete Product"><i class="fa fa-trash-o"></i> </button>
+                               <a href="{{url('/admin/delete-product/'.$product->id)}}" class="btn btn-danger btn-sm productDelete" title="Delete Product"><i class="fa fa-trash-o"></i> </button>
                                </td>
                             </tr>
                              @endforeach
@@ -124,4 +127,21 @@
     <!-- /.content -->
  </div>
  <!-- /.content-wrapper -->
+@endsection
+@section('js')
+<script>
+ // delete
+   $(document).ready( function () {
+    $(".productDelete").click(function(e){
+        e.preventDefault();
+        var link=$(this).attr("href");
+        bootbox.confirm("Are you sure to delete",function(confirmed){
+        if(confirmed){
+            // alert(link)
+        window.location.href=link;
+        };
+        });
+    });
+   });
+</script>
 @endsection

@@ -75,7 +75,7 @@
                         <div class="col-md-4">
                             <div class="widget">
                                 <h4 class="widget-title">Service</h4>
-                                
+
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <ul class="links">
@@ -104,7 +104,7 @@
                                         <ul class="links">
                                             <li><a href="/login">Login</a></li>
                                             <li><a href="/register">Register</a></li>
-                                            <li><a href="/dashboard">My Account</a></li>
+                                            <li><a href="/user/account">My Account</a></li>
                                         </ul>
                                     </div><!-- End .col-sm-6 -->
                                 </div><!-- End .row -->

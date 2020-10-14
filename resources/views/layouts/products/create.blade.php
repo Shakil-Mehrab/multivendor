@@ -51,6 +51,10 @@
                             <option value="">Select One</option>
                             @forelse($categories as $cat)
                                 <option value="{{$cat->id}}">{{$cat->name}}</option>
+                                @forelse($cat->children as $cl)
+                                <option value="{{$cl->id}}">&nbsp;&nbsp;&nbsp;&nbsp;-{{$cl->name}}</option>
+                                @empty
+                                @endforelse
                             @empty
                             @endforelse
                         </select>

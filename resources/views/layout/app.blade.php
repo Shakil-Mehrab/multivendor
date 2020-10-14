@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Hatirpal.com : Online Wholesale Marketplace In Bangladesh</title>
+    <title>@yield('title') - Hatirpal.com : Online Wholesale Marketplace In Bangladesh</title>
     <meta name="keywords" content="hatirpal.com,hatirpal,shopping" />
     <meta name="description" content="Hatirpal.com is the largest online wholesale marketplace in Bangladesh.Hatirpal.com has been experimenting with and out to win the trust of buyers" />
     <meta name="author" content="SW-THEMES">
@@ -18,6 +18,7 @@
     <!-- Main CSS File -->
     <link rel="stylesheet" href="{{asset('porto/css/style.min.css')}}">
     <script src="https://kit.fontawesome.com/bb2f33706c.js" crossorigin="anonymous"></script>
+    @yield('css')
 </head>
 <body>
     <div class="page-wrapper">
@@ -117,7 +118,7 @@
                     <li><a href="/register">Register</a></li>
                     <li><a href="/login">Login</a></li>
                     @else
-                    <li><a href="/dashboard">My Account</a></li>
+                    <li><a href="/user/account">My Account</a></li>
                     <li>
                         <a class="login-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}
                         </a>
@@ -206,10 +207,10 @@
             });
             $('.add-cart').on('click',function(e){
                 e.preventDefault();
-                var id=$(this).data('id');
+                var id=$('.active #imgId').val();
                 var size=$('#size').val();
-                // alert(size)
-                if(id){
+
+                if(size){
                     $.post("{{URL::to('/user/cart/add/')}}/"+id,{'size':size},function(data){
                     $.get('{{URL::to("user/cart/basket")}}',function(data){
                         $('#cartBasket').empty().append(data);
@@ -223,11 +224,11 @@
                     if($.isEmptyObject(data.error)){
                         Toast.fire({
                             icon: 'success',
-                            title: 'Cart Updated!'
+                            title: 'Product Added to Cart!'
                         })
                     }
                 });
-                }
+                }else{alert('Please Select a Size')}
             });
             $('#cartBasket').on('click','.cartBasketRemove',function(e){
                 var id=$(this).data('id');

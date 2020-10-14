@@ -63,7 +63,7 @@
                             <li><a href="/register">Register</a></li>
                             <li><a href="/login">Log In</a></li>
                             @else
-                            <li><a href="/dashboard">MY ACCOUNT </a></li>
+                            <li><a href="/user/account">MY ACCOUNT </a></li>
                             <li>
                             <a class="login-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}
                             </a>
@@ -90,7 +90,7 @@
             <div class="header-center">
                 <div class="header-search">
                     <a href="#" class="search-toggle" role="button"><i class="icon-magnifier"></i></a>
-                    <form action="{{route('search')}}" method="post">
+                    <form action="{{route('search.product')}}" method="post">
                         @csrf
                         <div class="header-search-wrapper">
                             <input type="search" class="form-control" name="query" id="q" placeholder="Search..." required>
@@ -153,13 +153,13 @@
                                             @php
                                                 $categories=Category::where('parent_id','0')->get();
                                             @endphp
-                                            @forelse($categories as $category)    
+                                            @forelse($categories as $category)
                                                 <li>
-                                                    <a href="/user/grid/category/{{$category->id}}">{{ $category->name}}</a>
+                                                    <a href="/user/category/{{$category->id}}">{{ $category->name}}</a>
                                                     <ul>
                                                     @if($category->children)
                                                         @foreach($category->children as $child)
-                                                            <li><a href="/user/grid/category/{{$child->id}}">-{{$child->name}}</a></li>
+                                                            <li><a href="/user/category/{{$child->id}}">-{{$child->name}}</a></li>
                                                         @endforeach
                                                     @endif
                                                     </ul>
@@ -168,7 +168,7 @@
                                             @endforelse
                                             </ul>
                                         </div><!-- End .col-lg-6 -->
-                                        
+
                                     </div><!-- End .row -->
                                 </div><!-- End .col-lg-8 -->
                                 <!-- <div class="col-lg-4">
@@ -261,13 +261,13 @@
                         </ul> -->
                     </li>
                      <li class="float-right"><a href="#">
-                         <div class="fb-messengermessageus" 
-                          messenger_app_id="451585265723432" 
+                         <div class="fb-messengermessageus"
+                          messenger_app_id="451585265723432"
                           page_id="105488687708483"
                           color="blue"
                           size="large" >
-                        </div> 
-                     </a></li> 
+                        </div>
+                     </a></li>
                     @php
                     use App\Models\Shop;
                     if(Auth::check()){
@@ -288,4 +288,3 @@
         </div><!-- End .header-bottom -->
     </div><!-- End .header-bottom -->
 </header><!-- End .header -->
-        

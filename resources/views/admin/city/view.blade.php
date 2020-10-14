@@ -74,7 +74,7 @@
                             <td>{{$category->name}}</td>
                                <td>
                                <a href="{{url('/admin/edit-city/'.$category->id)}}" class="btn btn-add btn-sm"><i class="fa fa-pencil"></i></button>
-                               <a href="{{url('/admin/delete-city/'.$category->id)}}" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> </button>
+                               <a href="{{url('/admin/delete-city/'.$category->id)}}" class="btn btn-danger btn-sm cityDelete"><i class="fa fa-trash-o"></i> </button>
                                </td>
                             </tr>
                              @endforeach
@@ -90,4 +90,21 @@
     <!-- /.content -->
  </div>
  <!-- /.content-wrapper -->
+@endsection
+@section('js')
+<script>
+ // delete
+   $(document).ready( function () {
+    $(".cityDelete").click(function(e){
+        e.preventDefault();
+        var link=$(this).attr("href");
+        bootbox.confirm("Are you sure to delete",function(confirmed){
+        if(confirmed){
+            // alert(link)
+        window.location.href=link;
+        };
+        });
+    });
+   });
+</script>
 @endsection

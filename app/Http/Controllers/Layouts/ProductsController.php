@@ -93,7 +93,7 @@ class ProductsController extends Controller
             }
             Product::where(['id'=>$id])->update([
             'category_id'=>$data['category_id'],'shop_id'=>$data['shop_id'],'name'=>$data['name'],'slug'=>$data['slug'],'brand'=>$data['brand'],'code'=>$data['code'],'color'=>$data['color'],
-            'price'=>$data['price'],'quantity'=>$data['quantity'],'weight'=>$data['weight'],'min_order'=>$data['min_order'],'description'=>$data['description'],
+            'price'=>$data['price'],'sale_price'=>$data['sale_price'],'quantity'=>$data['quantity'],'weight'=>$data['weight'],'min_order'=>$data['min_order'],'description'=>$data['description'],
             'image'=>$filename]);
             return redirect('/admin/view-products')->with('flash_message_success','Product has been updated!!');
         }

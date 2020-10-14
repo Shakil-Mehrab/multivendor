@@ -1,4 +1,5 @@
-@extends('layouts.app')
+@extends('layout.app')
+@section('title','Search - ')
 @section('content')
 <main class="main">
     <div class="banner banner-cat" style="background-image: url({{asset('porto/images/banners/banner-top.jpg')}})">
@@ -15,8 +16,8 @@
         <div class="container">
             <ol class="breadcrumb mt-0">
                 <li class="breadcrumb-item"><a href="/home"><i class="icon-home"></i></a></li>
-                <li class="breadcrumb-item"><a href="#">Categories</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Default</li>
+                <li class="breadcrumb-item"><a href="#">Search</a></li>
+                <li class="breadcrumb-item active" aria-current="page">All Product</li>
             </ol>
         </div><!-- End .container -->
     </nav>
@@ -46,7 +47,7 @@
                         <label>Showing 1–9 of 60 results</label>
                     </div><!-- End .toolbox-item -->
 
-                    
+
                 </nav>
 
                 <div class="row row-sm">
@@ -55,7 +56,7 @@
                             <div class="product">
                                 <figure class="product-image-container">
                                     <a href="/user/product/show/{{$product->id}}" class="product-image">
-                                        <img src="{{asset('storage/app/public')}}/{{$product->cover_img}}" alt="product">
+                                        <img src="{{asset('/uploads/products/'.$product->image)}}" alt="product">
                                     </a>
                                     <a href="/user/product/quick/show/{{$product->id}}" class="btn-quickview">Quickview</a>
                                 </figure>
@@ -66,25 +67,25 @@
                                         </div><!-- End .product-ratings -->
                                     </div><!-- End .product-container -->
                                     <h2 class="product-title">
-                                        <a href="/user/product/show/{{$product->id}}">Felt Hat</a>
+                                        <a href="/user/product/show/{{$product->id}}">{{$product->name}}</a>
                                     </h2>
                                     <div class="price-box">
                                         <span class="product-price">৳ {{$product->sale_price}}</span>
                                     </div><!-- End .price-box -->
 
-                                    <div class="product-action">
-                                        <a href="#" class="paction add-wishlist" title="Add to Wishlist">
-                                            <span>Add to Wishlist</span>
-                                        </a>
-                                        <!-- ehkane show rakho.nahole cart a return back a get method search pade er post methos match korbe na -->
-                                        <a href="#" class="paction add-cart" title="Add to Cart" data-id="{{$product->id}}">
-                                            <span>Add to Cart</span>
-                                        </a>
+                                    <!--<div class="product-action">-->
+                                    <!--    <a href="#" class="paction add-wishlist" title="Add to Wishlist">-->
+                                    <!--        <span>Add to Wishlist</span>-->
+                                    <!--    </a>-->
 
-                                        <a href="#" class="paction add-compare" title="Add to Compare">
-                                            <span>Add to Compare</span>
-                                        </a>
-                                    </div><!-- End .product-action -->
+                                    <!--    <a href="#" class="paction add-cart" title="Add to Cart" data-id="{{$product->id}}">-->
+                                    <!--        <span>Add to Cart</span>-->
+                                    <!--    </a>-->
+
+                                    <!--    <a href="#" class="paction add-compare" title="Add to Compare">-->
+                                    <!--        <span>Add to Compare</span>-->
+                                    <!--    </a>-->
+                                    <!--</div>-->
                                 </div><!-- End .product-details -->
                             </div><!-- End .product -->
                         </div>
@@ -233,7 +234,7 @@
                         </div><!-- End .collapse -->
                     </div><!-- End .widget -->
 
-                    
+
 
                     <div class="widget widget-block">
                         <h3 class="widget-title">Custom HTML Block</h3>

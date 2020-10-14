@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use RealRashid\SweetAlert\Facades\Alert;
-use App\Mail\ShopActivationRequest;
-use App\Models\Category;
+use App\Notifications\ShopActivationRequest;
+
+use App\Models\User;
 use App\Models\Country;
 use App\Models\City;
 use App\Models\Shop;
+use App\Models\Product;
 use Session;
 use Image;
 use DB;
@@ -44,12 +46,14 @@ class ShopController extends Controller
                $shop->image = $filename;
            }
            }
-            //send mail to admin
             // $admins = User::whereHas('role', function ($q) {
             //     $q->where('name', 'admin');
             // })->get();
+            // $admin=User::where('role_id',1)->first();
             // Mail::to('mehrabhoussainshakil4@gmail.com')->send(new ShopActivationRequest($shop));
             $shop->save();
+            $user=User::where('role_id',1)->first();
+            $user->notify(new ShopActivationRequest($shop));
             return redirect('/')->withSuccess('Shop Created Succesfully!!! Wait For Confirmation');
         }
         return view('admin.shop.create');
@@ -115,5 +119,11 @@ class ShopController extends Controller
             $user->update();
         }
 
+
     }
+    public function viewShopProduct($id){
+        $products = Product::where('shop_id',$id)->get();
+        return view('admin.shop.viewProduct')->with(compact('products'));
+    }
+
 }

@@ -1,4 +1,5 @@
 @extends('layout.app')
+@section('title','Shop Create - ')
 @section('content')
 @php
 use App\Models\Country;
@@ -20,7 +21,7 @@ $cities=City::orderBy('name','asc')->get();
         <div class="row">
             <div class="col-lg-9 order-lg-last dashboard-content">
                 <h2 class="text-center">Create Your Shop</h2>
-                
+
                 <form action="{{url('/admin/add-shop')}}" method="post" enctype="multipart/form-data">
                 	@csrf
                     <div class="row">
@@ -52,7 +53,7 @@ $cities=City::orderBy('name','asc')->get();
                                 <label for="country_id" class="control-label"><strong>Country</strong></label>
                                 <div class="select-custom">
                                     <select class="form-control" name="country_id" required>
-                                        <optgroup label="Select One"> 
+                                        <optgroup label="Select One">
                                             @forelse($countries as $ct)
                                             <option value="{{$ct->id}}">{{$ct->name}}</option>
                                             @empty
@@ -71,7 +72,7 @@ $cities=City::orderBy('name','asc')->get();
                                 <label for="city_id" class="control-label"><strong>City</strong></label>
                                 <div class="select-custom">
                                     <select class="form-control" name="city_id" required>
-                                        <optgroup label="Select One"> 
+                                        <optgroup label="Select One">
                                             @forelse($cities as $ct)
                                             <option value="{{$ct->id}}">{{$ct->name}}</option>
                                             @empty
@@ -103,7 +104,7 @@ $cities=City::orderBy('name','asc')->get();
                         <label><strong>Picture upload</strong></label>
                         <input type="file" id="image" name="image" class='form-control'>
                     </div>
-                    
+
                    	<div class="form-group required-field  {{ $errors->has('description') ? ' has-error' : '' }}">
                         <label for="description" class="control-label"><strong>Description</strong></label>
                         <textarea type="text" class="form-control" id="description" name="description" placeholder="Description" required>{{Request::old('description')}}</textarea>
@@ -113,7 +114,7 @@ $cities=City::orderBy('name','asc')->get();
 	                    </span>
 	                    @endif
                     </div>
-                    
+
                     <div class="mb-2"></div><!-- margin -->
 
                     <div class="custom-control custom-checkbox">
@@ -153,4 +154,3 @@ $cities=City::orderBy('name','asc')->get();
     <div class="mb-5"></div><!-- margin -->
 </main>
 @endsection
-       

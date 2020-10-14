@@ -49,10 +49,10 @@
                 <div class="panel-body">
                 <!-- Plugin content:powerpoint,txt,pdf,png,word,xl -->
                    <div class="btn-group">
-                      <div class="buttonexport" id="buttonlist">
+                      {{-- <div class="buttonexport" id="buttonlist">
                       <a class="btn btn-add" href="{{url('admin/add-category')}}"> <i class="fa fa-plus"></i> Add User
                          </a>
-                      </div>
+                      </div> --}}
 
                    </div>
                    <!-- Plugin content:powerpoint,txt,pdf,png,word,xl -->
@@ -80,15 +80,15 @@
                             <td>{{$category->phone}}</td>
                             <td>{{$category->country_name}}</td>
                             <td>{{$category->city_name}}</td>
-                            <td>{{$category->role_id}}</td>
+                            <td>{{$category->role->display_name}}</td>
                               <td>
                                 @if(!empty($category->profile_photo_path))
                                     <img src="{{asset($category->profile_photo_path)}}" alt="" style="width:100px;">
                                 @endif
                                 </td>
                                <td>
-                               <a href="{{url('/admin/edit-user/'.$category->id)}}" class="btn btn-add btn-sm"><i class="fa fa-pencil"></i></button>
-                               <a href="{{url('/admin/delete-user/'.$category->id)}}" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> </button>
+                               <a href="{{url('/admin/edit-user/'.$category->id)}}" class="btn btn-add btn-sm"><i class="fa fa-pencil"></i></a>
+                               <a href="{{url('/admin/delete-user/'.$category->id)}}" class="btn btn-danger btn-sm userDelete"><i class="fa fa-trash-o"></i> </a>
                                </td>
                             </tr>
                              @endforeach
@@ -103,4 +103,21 @@
     <!-- /.content -->
  </div>
  <!-- /.content-wrapper -->
+@endsection
+@section('js')
+<script>
+ // delete
+   $(document).ready( function () {
+    $(".userDelete").click(function(e){
+        e.preventDefault();
+        var link=$(this).attr("href");
+        bootbox.confirm("Are you sure to delete",function(confirmed){
+        if(confirmed){
+            // alert(link)
+        window.location.href=link;
+        };
+        });
+    });
+   });
+</script>
 @endsection

@@ -97,16 +97,44 @@
       <script src="{{asset('admin-assets/dist/js/dashboard.js')}}" type="text/javascript"></script>
       <!-- End Theme label Script
          =====================================================================-->
-         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
-         @yield('js');
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <!-- Delete Confirm Cdn
+         =====================================================================-->
+        <script type="text/javascript" src="{{asset('https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js')}}"></script>
 
+        @yield('js')
          <script>
+         //  facebook
+        window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '451585265723432',
+          xfbml      : true,
+          version    : 'v2.8'
+            });
+            FB.AppEvents.logPageView();
+          };
+
+          (function(d, s, id){
+             var js, fjs = d.getElementsByTagName(s)[0];
+             if (d.getElementById(id)) {return;}
+             js = d.createElement(s); js.id = id;
+             js.src = "//connect.facebook.net/en_US/sdk.js";
+             fjs.parentNode.insertBefore(js, fjs);
+           }(document, 'script', 'facebook-jssdk'));
+            //end facebook
+
          $(document).ready( function () {
          $('#table_id').DataTable({
                "paging":false,
 
          });
          $(this).closest('td').attr('id');
+        //  notification
+        $("#markasread").click(function(){
+            $.get('/markAsRead');
+        });
+
          //Update Product Status
          $(".ProductStatus").change(function(){
           var id = $(this).attr('rel');

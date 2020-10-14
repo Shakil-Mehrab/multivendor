@@ -12,17 +12,19 @@ use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\DeliveryBranchController;
 use App\Http\Controllers\Admin\AdminCartController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\SlideController;
 
 
 // User
 use App\Http\Controllers\Layouts\ProductsController;
+use App\Http\Controllers\HomeController;
 
 
 // public
 use App\Http\Controllers\Layout\AboutController;
 use App\Http\Controllers\Layout\Cart\CartController;
 use App\Http\Controllers\Layout\PublicController;
-
+use App\Http\Controllers\Layout\ReviewController;
 
 
 /*
@@ -39,9 +41,10 @@ use App\Http\Controllers\Layout\PublicController;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('home');
-})->name('dashboard');
+Route::group(['middleware'=>['auth:sanctum', 'verified']],function () {
+    Route::get('/dashboard', [HomeController::class,'home'])->name('dashboard');
+    Route::get('/user/account', [HomeController::class,'accont']);
+});
 
 
 Route::get('/search',[ShopController::class,'addCategory'])->name('search');
@@ -84,8 +87,16 @@ Route::get('/codes',[CartController::class,'codeShow']);
 Route::get('/delivery/branch',[CartController::class,'deliveryBranch']);
 Route::get('/districts',[CartController::class,'districtShow']);
 Route::get('/areas',[CartController::class,'areasShow']);
-
-
+// Search
+Route::post('/search/product',[PublicController::class,'search'])->name('search.product');
+// Category
+Route::get('/user/category/{cat_id}',[PublicController::class,'categoryIndex']);
+Route::get('/user/grid/category/{cat_id}',[PublicController::class,'gridIndex']);
+Route::get('/user/list/category/{cat_id}',[PublicController::class,'listIndex']);
+// Notification
+Route::get('/markAsRead', function(){
+    auth()->user()->unreadNotifications->markAsRead();
+});
 
 
 
@@ -93,7 +104,12 @@ Route::get('/areas',[CartController::class,'areasShow']);
 
 
 Route::group(['middleware' =>['auth']],function(){
-    Route::match(['get','post'],'/admin/dashboard','AdminController@dashboard');
+    // Route::match(['get','post'],'/admin/dashboard','AdminController@dashboard');
+    //Slide Route
+    Route::match(['get','post'],'/admin/add-slide',[SlideController::class,'addCategory']);
+    Route::match(['get','post'],'/admin/view-slide',[SlideController::class,'viewCategories']);
+    Route::match(['get','post'],'/admin/edit-slide/{id}',[SlideController::class,'editCategory']);
+    Route::match(['get','post'],'/admin/delete-slide/{id}',[SlideController::class,'deleteCategory']);
     //Shop Route
     Route::match(['get','post'],'/admin/view-user',[AdminUserController::class,'viewCategories']);
     Route::match(['get','post'],'/admin/edit-user/{id}',[AdminUserController::class,'editCategory']);
@@ -101,7 +117,7 @@ Route::group(['middleware' =>['auth']],function(){
     //Discount Route
     //Cart Route
     Route::match(['get','post'],'/admin/add-order',[AdminCartController::class,'addCategory']);
-    Route::match(['get','post'],'/admin/view-order',[AdminCartController::class,'viewCategories']);
+    Route::match(['get','post'],'/admin/view-order/{type}',[AdminCartController::class,'viewCategories']);
     Route::match(['get','post'],'/admin/view-order/item/{id}',[AdminCartController::class,'viewCategoriesItem']);
     Route::match(['get','post'],'/admin/delete-order/item/{id}',[AdminCartController::class,'viewCategoriesItemDelete']);
     Route::match(['get','post'],'/admin/edit-order/{id}',[AdminCartController::class,'editCategory']);
@@ -128,6 +144,7 @@ Route::group(['middleware' =>['auth']],function(){
     Route::match(['get','post'],'/admin/view-shop',[ShopController::class,'viewCategories']);
     Route::match(['get','post'],'/admin/edit-shop/{id}',[ShopController::class,'editCategory']);
     Route::match(['get','post'],'/admin/delete-shop/{id}',[ShopController::class,'deleteCategory']);
+    Route::match(['get','post'],'/admin/view-shop/product/{id}',[ShopController::class,'viewShopProduct']);
     Route::post('/admin/update-shop-status',[ShopController::class,'updateStatus']);
     //Discount Route
     Route::match(['get','post'],'/admin/add-discount',[DiscountController::class,'addCategory']);
@@ -170,7 +187,8 @@ Route::group(['middleware' =>['auth']],function(){
     Route::get('/admin/delete-coupon/{id}',[CouponsController::class,'deleteCoupon']);
     Route::post('/admin/update-coupon-status',[CouponsController::class,'updateStatus']);
     //product review
-    Route::post('/user/review/products/{id}',[PublicController::class,'review'])->name('review.product');
+    Route::post('/user/review/products/{id}',[ReviewController::class,'review'])->name('review.product');
+    Route::post('/rating/show',[ReviewController::class,'show']);
     // checkout
     Route::get('/user/checkout', [CartController::class,'checkout']);
     Route::post('/orders/store',[CartController::class,'store'])->name('orders.store');

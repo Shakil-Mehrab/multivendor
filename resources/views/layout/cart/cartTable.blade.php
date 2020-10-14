@@ -1,5 +1,6 @@
-@php 
+@php
     $carts=Cart::getContent();
+    use App\Models\Product_image;
 @endphp
 <div class="row">
     <div class="col-lg-8">
@@ -16,20 +17,31 @@
                 </thead>
                 <tbody>
                 @forelse($carts as $cart)
+                @php
+                    $productImage=Product_image::find($cart->id);
+                @endphp
                     <form method="post" action="#">
                         @csrf
                         <tr class="product-row">
                             <td class="product-col">
                                 <figure class="product-image-container">
-                                    <a href="/user/product/show/{{$cart->id}}" class="product-image">
+                                    <a href="/user/product/show/{{$productImage->product->id}}" class="product-image">
                                         <img src="{{asset('/uploads/products/'.$cart->attributes->image)}}" style="width: 50%" alt="product">
                                     </a>
                                 </figure>
                                 <h2 class="product-title">
-                                    <a href="/user/product/show/{{$cart->id}}">{{$cart->name}}</a>
+                                    <!--<a href="/user/product/show/{{$cart->id}}">{{$cart->name}}</a>-->
                                 </h2>
                             </td>
-                            <td>{{$cart->attributes->size}}</td>
+                            <td>
+                                <select class="form-control" name="size_id" id='size_id' required>
+                                    <option value="">Select One</option>
+                                    @forelse($productImage->product->attributes as $att)
+                                    <option value="{{$att->id}}" {{$att->size==$cart->attributes->size?'selected':''}}>{{$att->size}}</option>
+                                    @empty
+                                    @endforelse
+                                </select>
+                            </td>
                             <td> ৳ {{$cart->price}}</td>
                             <td>
                                 <span style="display: flex;flex-direction: row;justify-content: center;">
@@ -44,7 +56,7 @@
                                 <!-- <div class="float-left">
                                     <a href="#" class="btn-move">Move to Wishlist</a>
                                 </div> -->
-                                
+
                                 <div class="float-right">
                                     <!-- <a href="#" title="Edit product" class="btn-edit"><span class="sr-only">Edit</span><i class="icon-pencil"></i></a> -->
                                     <a href="#" title="Remove product" class="btn-remove cartRowRemove"  data-id="{{$cart->id}}"><span class="sr-only">Remove</span></a>

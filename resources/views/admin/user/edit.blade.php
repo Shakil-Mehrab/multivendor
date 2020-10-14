@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title','Edit Category')
+@section('title','Edit User')
 @section('content')
 
   <!-- Content Wrapper. Contains page content -->
@@ -10,8 +10,8 @@
           <i class="fa fa-pencil"></i>
        </div>
        <div class="header-title">
-          <h1>Edit Category</h1>
-          <small>Edit Category</small>
+          <h1>Edit User</h1>
+          <small>Edit User</small>
        </div>
     </section>
     @if(Session::has('flash_message_error'))
@@ -39,49 +39,39 @@
              <div class="panel panel-bd lobidrag">
                 <div class="panel-heading">
                    <div class="btn-group" id="buttonlist">
-                      <a class="btn btn-add " href="{{url('admin/view-categories')}}">
-                      <i class="fa fa-eye"></i>  View Categories </a>
+                      <a class="btn btn-add " href="{{url('admin/view-user')}}">
+                      <i class="fa fa-eye"></i>  View User </a>
                    </div>
                 </div>
                 <div class="panel-body">
-                <form class="col-sm-6" action="{{url('/admin/edit-category/'.$categoryDetails->id)}}" method="post" enctype="multipart/form-data"> {{csrf_field()}}
+                <form class="col-sm-6" action="{{url('/admin/edit-user/'.$categoryDetails->id)}}" method="post" enctype="multipart/form-data"> {{csrf_field()}}
                       <div class="form-group">
-                         <label>Category Name</label>
-                      <input type="text" class="form-control" value="{{$categoryDetails->name}}" name="category_name" id="category_name" required>
+                         <label>User Name</label>
+                      <input type="text" class="form-control" value="{{$categoryDetails->name}}" name="name" id="name" required>
                       </div>
                       <div class="form-group">
-                        <label>Category Slug</label>
-                     <input type="text" class="form-control" value="{{$categoryDetails->slug}}" name="category_slug" id="category_slug" required>
-                     </div>
-                      <div class="form-group">
-                         <label>Parent Category</label>
-                         <select name="parent_id" id="parent_id" class="form-control">
-                             <option value="0">Parent Category</option>
-                             @foreach($levels as $val)
-                         <option value="{{$val->id}}" @if($val->id==$categoryDetails->parent_id) selected @endif>{{$val->name}}</option>
-                             @endforeach
+                         <label>Role</label>
+                         <select name="role_id" id="role_id" class="form-control">
+                            <option value="">Select One</option>
+                            <option value="1" @if($categoryDetails->role_id==1) selected @endif>Admin</option>
+                            <option value="2" @if($categoryDetails->role_id==2) selected @endif>Member</option>
+                            <option value="3" @if($categoryDetails->role_id==3) selected @endif>User</option>
                          </select>
                       </div>
                       <div class="form-group">
-                         <label>Url</label>
-                      <input type="text" class="form-control" value="{{$categoryDetails->url}}" name="category_url" id="category_url" required>
+                        <label>Email</label>
+                        <input type="text" class="form-control" value="{{$categoryDetails->email}}" name="email" id="email" required>
                       </div>
                       <div class="form-group">
-                         <label>Description</label>
-                         <textarea name="category_description" id="category_description" class="form-control">
-                            {{$categoryDetails->description}}
-                         </textarea>
+                        <label>Country</label>
+                        <input type="text" class="form-control" value="{{$categoryDetails->country_name}}" name="country_name" id="country_name" required>
                       </div>
                       <div class="form-group">
-                        <label>Picture upload</label>
-                        <input type="file" name="image">
-                           <input type="hidden" name="current_image" value="{{$categoryDetails->image}}">
-                        @if(!empty($categoryDetails->image))
-                        <img style="width:100px;margin-top:10px;" src="{{asset('/uploads/categories/'.$categoryDetails->image)}}">
-                        @endif
-                     </div>
+                        <label>City</label>
+                        <input type="text" class="form-control" value="{{$categoryDetails->city_name}}" name="city_name" id="city_name" required>
+                      </div>
                       <div class="reset-button">
-                         <input type="submit" class="btn btn-success" value="Edit Category">
+                         <input type="submit" class="btn btn-success" value="Edit User">
                       </div>
                    </form>
                 </div>

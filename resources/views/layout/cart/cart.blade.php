@@ -1,8 +1,9 @@
 @extends('layout.app')
+@section('title','Product Cart')
 @section('content')
-@php 
+@php
     $carts=Cart::getContent();
-@endphp 
+@endphp
 <main class="main">
     <nav aria-label="breadcrumb" class="breadcrumb-nav">
         <div class="container">
@@ -54,7 +55,7 @@
                                 title: 'Product Removed from Cart!'
                             })
                         }
-                        
+
                     });
                 }
             });
@@ -62,7 +63,10 @@
                 e.preventDefault();
                 var id=$(this).data('id');
                 var qty=$('#qty').val();
-                $.post("{{URL::to('/user/cart/update/')}}/"+id,{'qty':qty},function(data){
+                var size_id=$('#size_id').val();
+
+                if(size_id){
+                $.post("{{URL::to('/user/cart/update/')}}/"+id,{'qty':qty,'size_id':size_id},function(data){
                     $('#cartTable').empty().append(data);
                     $.get('{{URL::to("user/cart/basket")}}',function(data){
                         $('#cartBasket').empty().append(data);
@@ -80,9 +84,11 @@
                         })
                     }
                 });
+                }else{
+                    alert('Please Select a Size')
+                }
             });
-            
         });
 
-    </script> 
+    </script>
 @endsection

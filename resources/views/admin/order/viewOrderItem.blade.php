@@ -50,8 +50,8 @@
                 <!-- Plugin content:powerpoint,txt,pdf,png,word,xl -->
                    <div class="btn-group">
                       <div class="buttonexport" id="buttonlist">
-                      <a class="btn btn-add" href="{{url('admin/add-category')}}"> <i class="fa fa-plus"></i> Add Category
-                         </a>
+                      {{-- <a class="btn btn-add" href="{{url('admin/add-category')}}"> <i class="fa fa-plus"></i> Add Category
+                         </a> --}}
                       </div>
 
                    </div>
@@ -70,24 +70,25 @@
                             </tr>
                          </thead>
                          <tbody>
-                            @foreach($category->orderItems as $cat)
+                            @forelse($category->orderItems as $cat)
                             <tr>
                                 <td>{{$cat->id}}</td>
                                 <td>{{$cat->order->id}}</td>
-                                <td>{{$cat->product->name}}</td>
+                                <td><a href="{{url('/user/product/show',$cat->product_image->product->id)}}">{{$cat->product_image->product->name}}</a></td>
                                 <td>{{$cat->price}}</td>
                                 <td>{{$cat->quantity}}</td>
                                 <td>
-                                    @if(!empty($cat->product->image))
-                                        <img src="{{asset('/uploads/products/'.$cat->product->image)}}" alt="" style="width:100px;">
+                                    @if(!empty($cat->product_image->image))
+                                        <img src="{{asset('/uploads/products/'.$cat->product_image->image)}}" alt="{{$cat->product_image->image}}" style="width:100px;">
                                     @endif
                                 </td>
                                 <td>
                                 <a href="{{url('/admin/edit-category/'.$cat->id)}}" class="btn btn-add btn-sm"><i class="fa fa-pencil"></i></button>
-                                <a href="{{url('/admin/delete-order/item/'.$cat->id)}}" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> </button>
+                                <a href="{{url('/admin/delete-order/item/'.$cat->id)}}" class="btn btn-danger btn-sm orderItemDelete"><i class="fa fa-trash-o"></i> </button>
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            @endforelse
                          </tbody>
                       </table>
 
@@ -100,4 +101,21 @@
     <!-- /.content -->
  </div>
  <!-- /.content-wrapper -->
+@endsection
+@section('js')
+<script>
+ // delete
+   $(document).ready( function () {
+    $(".orderItemDelete").click(function(e){
+        e.preventDefault();
+        var link=$(this).attr("href");
+        bootbox.confirm("Are you sure to delete",function(confirmed){
+        if(confirmed){
+            // alert(link)
+        window.location.href=link;
+        };
+        });
+    });
+   });
+</script>
 @endsection

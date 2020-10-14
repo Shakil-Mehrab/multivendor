@@ -31,8 +31,20 @@ class AdminCartController extends Controller
         $levels = Order::orderBy('id','desc')->get();
         return view('admin.order.create')->with(compact('levels'));
     }
-    public function viewCategories(){
-        $categories = Order::orderBy('id','desc')->get();
+    public function viewCategories($type=null){
+        // dd($type);
+        if($type=='pending'){
+            $categories = Order::orderBy('id','desc')->where('status','pending')->get();
+        }
+        if($type=='processing'){
+            $categories = Order::orderBy('id','desc')->where('status','processing')->get();
+        }
+        if($type=='decline'){
+            $categories = Order::orderBy('id','desc')->where('status','decline')->get();
+        }
+        if($type=='completed'){
+            $categories = Order::orderBy('id','desc')->where('status','completed')->get();
+        }
         return view('admin.order.view')->with(compact('categories'));
     }
     public function editCategory(Request $request,$id=null){

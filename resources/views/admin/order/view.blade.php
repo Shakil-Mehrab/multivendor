@@ -99,7 +99,7 @@
                             <td>{{$category->shipping_phone}}</td>
                            <td>
                                <a href="{{url('/admin/edit-order/'.$category->id)}}" class="btn btn-add btn-sm"><i class="fa fa-pencil"></i></button>
-                               <a href="{{url('/admin/delete-order/'.$category->id)}}" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> </button>
+                               <a href="{{url('/admin/delete-order/'.$category->id)}}" class="btn btn-danger btn-sm orderDelete"><i class="fa fa-trash-o"></i> </button>
                                <a href="{{url('/admin/view-order/item/'.$category->id)}}" class="btn btn-add btn-sm"> <i class="fa fa-eye"></i> </button>
                            </td>
                             </tr>
@@ -120,6 +120,16 @@
 @section('js')
 <script>
    $(document).ready( function () {
+    $(".orderDelete").click(function(e){
+        e.preventDefault();
+        var link=$(this).attr("href");
+        bootbox.confirm("Are you sure to delete",function(confirmed){
+        if(confirmed){
+            // alert(link)
+        window.location.href=link;
+        };
+        });
+    });
    $(".PaidStatus").change(function(){
           var id = $(this).attr('rel');
           if($(this).prop("checked")==true){

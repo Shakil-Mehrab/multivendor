@@ -60,4 +60,8 @@ class User extends Authenticatable
     public function shop(){
         return $this->hasOne('App\Models\Shop');
     }
+    public function role(){
+        return $this->belongsTo('App\Models\Role');
+    }
+
 }

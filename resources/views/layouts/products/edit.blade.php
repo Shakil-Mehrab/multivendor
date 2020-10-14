@@ -51,7 +51,12 @@
                         <select name="category_id" id="category_id" class="form-control" required>
                             <option value="">Select One</option>
                             @forelse($categories as $cat)
-                                <option value="{{$cat->id}}"{{$cat->id==$productDetails->category_id?'selected':''}}>{{$cat->name}}</option>
+                              <option value="{{$cat->id}}"{{$cat->id==$productDetails->category_id?'selected':''}}>{{$cat->name}}</option>
+                                @forelse($cat->children as $cl)
+                                 <option value="{{$cat->id}}"{{$cl->id==$productDetails->category_id?'selected':''}}>{{$cl->name}}</option>
+                                @empty
+                                @endforelse
+
                             @empty
                             @endforelse
                         </select>
@@ -121,7 +126,8 @@
                      </div>
                     </div>
                      {{-- admin section --}}
-                    <div class="col-sm-6">
+
+                    <div class="col-sm-6" style="display:{{auth()->user()->role_id==1?'initial':'none'}}">
                         <div class="form-group">
                         <label>Under Discount</label>
                         <select name="discount_id" id="discount_id" class="form-control">
@@ -156,10 +162,11 @@
                         <input type="text" class="form-control" placeholder="Rating" value="{{$productDetails->rating}}" name="rating" id="rating">
                         </div>
                     </div>
+
                     {{-- end admin section --}}
                     <div class="col-sm-12">
                       <div class="reset-button">
-                         <input type="submit" class="btn btn-success" value="Edit Product">
+                         <input type="submit" class="btn btn-success" value="Update Product">
                       </div>
                     </div>
                    </form>

@@ -78,7 +78,7 @@
                             <td>{{$category->charge}}</td>
                                <td>
                                <a href="{{url('/admin/edit-delivery/branch/'.$category->id)}}" class="btn btn-add btn-sm"><i class="fa fa-pencil"></i></button>
-                               <a href="{{url('/admin/delete-delivery/branch/'.$category->id)}}" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> </button>
+                               <a href="{{url('/admin/delete-delivery/branch/'.$category->id)}}" class="btn btn-danger btn-sm branchDelete"><i class="fa fa-trash-o"></i> </button>
                                </td>
                             </tr>
                              @endforeach
@@ -94,4 +94,21 @@
     <!-- /.content -->
  </div>
  <!-- /.content-wrapper -->
+@endsection
+@section('js')
+<script>
+ // delete
+   $(document).ready( function () {
+    $(".branchDelete").click(function(e){
+        e.preventDefault();
+        var link=$(this).attr("href");
+        bootbox.confirm("Are you sure to delete",function(confirmed){
+        if(confirmed){
+            // alert(link)
+        window.location.href=link;
+        };
+        });
+    });
+   });
+</script>
 @endsection

@@ -49,6 +49,6 @@ class Product extends Model
     }
     public function discount(){
     return $this->belongsTo(Discount::class);
-
     }
+
 }
